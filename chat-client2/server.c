@@ -15,15 +15,9 @@ void logexit(const char *str)
 }
 
 
-int main(int argc, char *argv[])
+int main(void)
 {
-	char *host, *mensagem, letraChar;
-	int s, server_port, len,letraAsc, numCrip, criptacao, i;
-
-	//Variaveis de passagem por argumento
-	server_port = atoi(argv[1]);
-
-
+	int s;
 	s = socket(AF_INET, SOCK_STREAM, 0);
 	if(s == -1) logexit("socket");
 
@@ -33,7 +27,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in addr;
 	struct sockaddr *addrptr = (struct sockaddr *)&addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(server_port);
+	addr.sin_port = htons(5152);
 	addr.sin_addr = inaddr;
 
 	if(bind(s, addrptr, sizeof(struct sockaddr_in)))
@@ -44,7 +38,8 @@ int main(int argc, char *argv[])
 
 	while(1) {
 		struct sockaddr_in raddr;
-		struct sockaddr *raddrptr = (struct sockaddr *)&raddr;
+		struct sockaddr *raddrptr =
+			(struct sockaddr *)&raddr;
 		socklen_t rlen = sizeof(struct sockaddr_in);
 
 		int r = accept(s, raddrptr, &rlen);
@@ -53,23 +48,27 @@ int main(int argc, char *argv[])
 		char buf[512];
 		char buf2[512];
 		char ipcliente[512];
-		inet_ntop(AF_INET, &(raddr.sin_addr), ipcliente, 512);
+		inet_ntop(AF_INET, &(raddr.sin_addr),
+				ipcliente, 512);
 
-		printf("conexao de %s %d\n", ipcliente, (int)ntohs(raddr.sin_port));
-
-
-		//Receber mensagem criptografada (buf)
+		printf("conexao de %s %d\n", ipcliente,
+				(int)ntohs(raddr.sin_port));
+		//Receber mensagem criptografada
 		size_t c = recv(r, buf, 512, 0);
-		printf("recebemos a mensagem %s\n", buf);
+		printf("recebemos %d bytes\n", (int)c);
+		puts(buf);
 
-		//Receber Numero para descriptografar
+		//Receber numero pra criptografar
 		c = recv(r, buf2, 512, 0);
-		printf("recebemos a mensagem %s\n", buf);
+		printf("Testar recebimento dos dados");
+		puts(buf2);
+		puts(buf2);
+		int numCrip, i, letraAsc, len;
+		char letraChar;
+		numCrip = atoi(buf2);
 
 
-		//numCrip = atoi(buf2); //Converte a mensagem para inteiro
-		//printf("O numero para descriptografar eh %d \n\n",numCrip);
-		/*
+
 		//Descriptografar mensagem
 		len = strlen(buf);
 		for(i=0;i<len;i++){
@@ -79,13 +78,19 @@ int main(int argc, char *argv[])
 							letraAsc = letraAsc + 26;
 				}
 				buf[i] = letraAsc;
-		}*/
-		//puts(buf);
-		printf("\n\nString descriptografada %s\n\n",buf);
+		}
+		puts(buf);
 
-		sprintf(buf, "seu IP eh %s %d\n", ipcliente, (int)ntohs(raddr.sin_port));
-		printf("enviando %s\n", buf);
+		/*
+		ssize_t count;
+		count = send(s, buf, strlen(buf)+1, 0);
+		if(count != strlen(buf)+1)
+			logexit("send");*/
 
+
+		printf("\nenviando %s\n", buf);
+
+		//Enviar string descriptografada
 		send(r, buf, strlen(buf)+1, 0);
 		printf("enviou\n");
 
