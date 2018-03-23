@@ -15,9 +15,10 @@ void logexit(const char *str)
 }
 
 
-int main(void)
+int main(int argc, char *argv[])
 {
-	int s;
+	int s, server_port;
+	server_port = atoi(argv[1]);
 	s = socket(AF_INET, SOCK_STREAM, 0);
 	if(s == -1) logexit("socket");
 
@@ -27,7 +28,7 @@ int main(void)
 	struct sockaddr_in addr;
 	struct sockaddr *addrptr = (struct sockaddr *)&addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(5152);
+	addr.sin_port = htons(server_port);
 	addr.sin_addr = inaddr;
 
 	if(bind(s, addrptr, sizeof(struct sockaddr_in)))
