@@ -23,7 +23,9 @@ int main(int argc, char *argv[])
 	host = argv[1];
 	server_port = atoi(argv[2]);
 	mensagem = argv[3];
+	//strcpy(mensagem, argv[3]);
 	cripChar = argv[4];
+	//strcpy(cripChar, argv[4]);
 	numCrip = atoi(argv[4]);
 
 	struct in_addr inaddr;
@@ -54,20 +56,26 @@ int main(int argc, char *argv[])
 	}
 
 	//Enviar mensagem
-	char linha[512];
-	printf("mensagem> ");
-	fgets(linha, 511, stdin);
+	//Obter tamanho da mensagem
+	int len_net;
+	len_net = htonl(10);
+	send(s,(const char*)&len_net,4,0);
+
+
 	ssize_t count;
-	count = send(s, mensagem, strlen(mensagem)+1, 0);
-	if(count != strlen(mensagem)+1)
+	count = send(s, mensagem, strlen(mensagem), 0);
+	if(count != strlen(mensagem))
 		logexit("send");
-		
-  //Enviar numero para criptografar
-	char linha2[512];
-	printf("mensagem> ");
-	fgets(linha2, 511, stdin);
-	count = send(s, cripChar, strlen(cripChar)+1, 0);
-	if(count != strlen(cripChar)+1)
+
+
+	//char linha2[512];
+	//printf("mensagem> ");
+	//fgets(linha2, 511, stdin);
+
+	//Enviar numero para criptografar
+	printf("\n\nEnviando o char %s",cripChar);
+	count = send(s, cripChar, strlen(cripChar), 0);
+	if(count != strlen(cripChar))
 		logexit("send");
 
 	printf("\n\nDados recebidos");

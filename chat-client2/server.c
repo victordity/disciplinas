@@ -46,30 +46,34 @@ int main(void)
 		if(r == -1) logexit("accept");
 
 		char buf[512];
-		char buf2[512];
+		bzero(buf,512);
+		char cripChar[512];
+		bzero(cripChar,512);
 		char ipcliente[512];
 		inet_ntop(AF_INET, &(raddr.sin_addr),
 				ipcliente, 512);
 
-		printf("conexao de %s %d\n", ipcliente,
-				(int)ntohs(raddr.sin_port));
+		//Receber tamanho da mensagem
+		int len_net;
+		int len_msg = ntohl(len_net);
+		recv(r, &len_net,4,0);
+		printf("\n\nA mensagem tem %d bits\n",len_net);
+
 		//Receber mensagem criptografada
-		size_t c = recv(r, buf, 512, 0);
+		size_t c = recv(r, buf, 3, 0);
 		printf("recebemos %d bytes\n", (int)c);
 		puts(buf);
 
-		//Receber numero pra criptografar
-		c = recv(r, buf2, 512, 0);
-		printf("Testar recebimento dos dados");
-		puts(buf2);
-		puts(buf2);
-		int numCrip, i, letraAsc, len;
-		char letraChar;
-		numCrip = atoi(buf2);
+		//Receber numero pra descriptografar
+		c = recv(r, cripChar, 512, 0);
 
-
+		printf("\n\n A string recebida foi %s ",cripChar);
 
 		//Descriptografar mensagem
+		int numCrip, i, letraAsc, len;
+		char letraChar;
+
+		numCrip = atoi(cripChar);
 		len = strlen(buf);
 		for(i=0;i<len;i++){
 				letraChar = buf[i];
@@ -91,7 +95,7 @@ int main(void)
 		printf("\nenviando %s\n", buf);
 
 		//Enviar string descriptografada
-		send(r, buf, strlen(buf)+1, 0);
+		send(r, buf, strlen(buf), 0);
 		printf("enviou\n");
 
 		close(r);
