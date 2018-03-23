@@ -55,22 +55,31 @@ int main(void)
 
 		//Receber tamanho da mensagem
 		int len_net;
-		int len_msg = ntohl(len_net);
-		recv(r, &len_net,4,0);
-		printf("\n\nA mensagem tem %d bits\n",len_net);
+		int len_msg;
+		size_t d = recv(r, &len_net,4,0);
+		printf("\nrecebemos %d bytes do tamanho da mensagem\n", (int)d);
+		len_msg = ntohl(len_net);
+		printf("O numero recebido foi %d\n",len_msg);
+
+		int len_netCrip;
+		int len_msgCrip;
+		size_t e = recv(r, &len_netCrip,4,0);
+		printf("\nrecebemos %d bytes do tamanho do char crip \n", (int)e);
+		len_msgCrip = ntohl(len_netCrip);
+		printf("O numero recebido foi %d\n",len_msgCrip);
 
 		//Receber mensagem criptografada
-		size_t c = recv(r, buf, 3, 0);
+		size_t c = recv(r, buf, len_msg, 0);
 		printf("recebemos %d bytes\n", (int)c);
 		puts(buf);
 
 		//Receber numero pra descriptografar
 		c = recv(r, cripChar, 512, 0);
 
-		printf("\n\n A string recebida foi %s ",cripChar);
+		printf("\n\n O numero para criptografar eh %s ",cripChar);
 
 		//Descriptografar mensagem
-		int numCrip, i, letraAsc, len;
+		int i, letraAsc, len, numCrip;
 		char letraChar;
 
 		numCrip = atoi(cripChar);

@@ -23,10 +23,9 @@ int main(int argc, char *argv[])
 	host = argv[1];
 	server_port = atoi(argv[2]);
 	mensagem = argv[3];
-	//strcpy(mensagem, argv[3]);
 	cripChar = argv[4];
-	//strcpy(cripChar, argv[4]);
-	numCrip = atoi(argv[4]);
+	numCrip = atoi(cripChar);
+
 
 	struct in_addr inaddr;
 	inet_pton(AF_INET, host,
@@ -58,19 +57,17 @@ int main(int argc, char *argv[])
 	//Enviar mensagem
 	//Obter tamanho da mensagem
 	int len_net;
-	len_net = htonl(10);
+	len_net = htonl(len);
 	send(s,(const char*)&len_net,4,0);
 
+	int lenCrip;
+	lenCrip = htonl(numCrip);
+	send(s,(const char*)&lenCrip,4,0);
 
 	ssize_t count;
 	count = send(s, mensagem, strlen(mensagem), 0);
 	if(count != strlen(mensagem))
 		logexit("send");
-
-
-	//char linha2[512];
-	//printf("mensagem> ");
-	//fgets(linha2, 511, stdin);
 
 	//Enviar numero para criptografar
 	printf("\n\nEnviando o char %s",cripChar);
