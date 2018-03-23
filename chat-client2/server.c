@@ -71,6 +71,12 @@ int main(int argc, char *argv[])
 
 		//Receber mensagem criptografada
 		size_t c = recv(r, buf, len_msg, 0);
+		
+		//Configurando o temporizador para o socket
+		struct timeval tv;
+		tv.tv_sec = 15;  /* 30 Secs Timeout */
+		setsockopt(r, SOL_SOCKET, SO_RCVTIMEO,(struct timeval *)&tv,sizeof(struct timeval));
+
 		printf("recebemos %d bytes\n", (int)c);
 		puts(buf);
 
