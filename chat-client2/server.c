@@ -74,15 +74,15 @@ int main(void)
 		puts(buf);
 
 		//Receber numero pra descriptografar
-		c = recv(r, cripChar, 512, 0);
-
-		printf("\n\n O numero para criptografar eh %s ",cripChar);
+		//c = recv(r, cripChar, 512, 0);
+		int numCrip = len_msgCrip;
+		printf("\n\n O numero para criptografar eh %d\n",len_msgCrip);
 
 		//Descriptografar mensagem
-		int i, letraAsc, len, numCrip;
+		int i, letraAsc, len;
 		char letraChar;
 
-		numCrip = atoi(cripChar);
+		//numCrip = atoi(cripChar);
 		len = strlen(buf);
 		for(i=0;i<len;i++){
 				letraChar = buf[i];

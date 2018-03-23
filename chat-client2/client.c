@@ -69,12 +69,13 @@ int main(int argc, char *argv[])
 	if(count != strlen(mensagem))
 		logexit("send");
 
+		/*
 	//Enviar numero para criptografar
 	printf("\n\nEnviando o char %s",cripChar);
 	count = send(s, cripChar, strlen(cripChar), 0);
 	if(count != strlen(cripChar))
 		logexit("send");
-
+*/
 	printf("\n\nDados recebidos");
 
 
